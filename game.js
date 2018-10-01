@@ -3,7 +3,7 @@ exports = typeof window !== "undefined" && window !== null ? window : global;
 exports.Game = function(questions) {
   var players = new Array();
   var currentPlayer = 0;
-  var questions = questions;
+  this.questions = questions;
 
   function Player(playerName) {
     this.playerName = playerName;
@@ -11,7 +11,11 @@ exports.Game = function(questions) {
     this.inPenaltyBox = false;
     this.location = 0;
     console.log(playerName + " was added")
-  }
+  };
+
+  this.getPlayer = function(id) {
+    return players[id];
+  };
 
   var howManyPlayers = function() {
     return players.length;
@@ -19,13 +23,13 @@ exports.Game = function(questions) {
 
   var changePlayer = function() {
     currentPlayer = (currentPlayer + 1) % howManyPlayers();
-  }
+  };
 
   var didPlayerWin = function() {
     return !(players[currentPlayer].coins == 6)
   };
 
-  var currentCategory = function(location){
+  var currentCategory = function(location) {
     switch(location) {
       case 0:
       case 4:
@@ -44,7 +48,7 @@ exports.Game = function(questions) {
     }
   };
 
-  this.isPlayable = function(howManyPlayers) {
+  this.isPlayable = function() {
     return howManyPlayers() >= 2;
   };
 
@@ -58,7 +62,7 @@ exports.Game = function(questions) {
     console.log(players[currentPlayer].playerName + " is the current player");
     console.log("They have rolled a " + roll);
 
-    if(players[currentPlayer].inPenaltyBox){
+    if(players[currentPlayer].inPenaltyBox) {
       console.log(players[currentPlayer].playerName + " is in the penalty box with an odd roll the player gets out!");
       if(roll % 2 != 0) {
         players[currentPlayer].inPenaltyBox = false;
@@ -94,19 +98,20 @@ exports.Game = function(questions) {
   this.submitAnswer = function(answer) {
     if(answer == 7) wrongAnswer();
     else correctAnswer();
-    
+
     changePlayer();
     return didPlayerWin();
   };
 };
 
-function questionDatabase() {
+exports.QuestionDatabase = function() {
     var popQuestions     = new Array();
     var scienceQuestions = new Array();
     var sportsQuestions  = new Array();
     var rockQuestions    = new Array();
 
-    for(var i = 0; i < 50; i++){
+
+    for(var i = 0; i < 50; i++) {
       popQuestions.push("Pop Question " + i);
       scienceQuestions.push("Science Question " + i);
       sportsQuestions.push("Sports Question " + i);
@@ -155,7 +160,7 @@ function questionDatabase() {
 
 var notAWinner = false;
 
-var questionsObject = new questionDatabase();
+var questionsObject = new QuestionDatabase();
 var game = new Game(questionsObject);
 
 game.add('Chet');

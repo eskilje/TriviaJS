@@ -1,15 +1,28 @@
 require('./game.js');
 
 describe("The test environment", function() {
-  it("should pass", function() {
-    expect(true).toBe(true);
-  });
+	var questionsObjectTest = new QuestionDatabase();
+	var gameTest = new Game(questionsObjectTest);
 
-  it("should access game", function() {
-    expect(Game).toBeDefined();
-  });
-});
+	gameTest.add('Chet');
+	gameTest.add('Pat');
+	gameTest.add('Sue');
 
-describe("Your specs...", function() {
-  // it ...
+	it("should access game", function() {
+    	expect(gameTest).toBeDefined();
+	});
+
+	it("should access game", function() {
+    	expect(questionsObjectTest).toBeDefined();
+	});
+
+	it("should be playable", function() {
+		var playable = gameTest.isPlayable();
+		expect(playable).toEqual(true);
+	});
+
+	it("player 1 should be Chet", function() {
+		player = gameTest.getPlayer(0);
+		expect(player.getName).toEqual("Chet");
+	})
 });
