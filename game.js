@@ -77,7 +77,7 @@ exports.Game = function(questions) {
     console.log(players[currentPlayer].playerName + "'s new location is " + players[currentPlayer].location);
     var category = currentCategory(players[currentPlayer].location);
     console.log("The category is " + category);
-    questions.getQuestion(category);
+    console.log(questions.getQuestion(category));
   };
 
   var correctAnswer = function() {
@@ -104,63 +104,46 @@ exports.Game = function(questions) {
   };
 };
 
-exports.QuestionDatabase = function() {
-    var popQuestions     = new Array();
-    var scienceQuestions = new Array();
-    var sportsQuestions  = new Array();
-    var rockQuestions    = new Array();
+exports.QuestionDatabase = function(categories) {
 
+    function QuestionArray(categoryParam) {
+        var category = categoryParam;
+        var questions = new Array();
+        for(var i = 0; i < 50; i++) {
+          questions.push(category + " Question " + i);
+        }
 
-    for(var i = 0; i < 50; i++) {
-      popQuestions.push("Pop Question " + i);
-      scienceQuestions.push("Science Question " + i);
-      sportsQuestions.push("Sports Question " + i);
-      rockQuestions.push("Rock Quetion " + i);
-    };
+        this.fetchQuestion = function() {
+          if(questions.length != 0)
+            return questions.shift();
+          else
+            return ("No questions left in category " + category);
+        }
 
-    var noQuestionsLeft = function(category) {
-      console.log(category + " has no questions left");
+        this.getCategory = function() {
+          return category;
+        }
+    }
+
+    var categoryArrays = new Array();
+
+    for(var i = 0; i < categories.length; i++) {
+      categoryArrays.push(new QuestionArray(categories[i]))
     }
 
     this.getQuestion = function(category) {
-      switch(category) {
-      case 'Pop':
-        if(popQuestions.length != 0)
-          console.log(popQuestions.shift());
-        else {
-          noQuestionsLeft('Pop');
+      for(var i = 0; i < categoryArrays.length; i++) {
+        if(categoryArrays[i].getCategory() == category) {
+          return categoryArrays[i].fetchQuestion();
         }
-        break;
-      case'Science':
-        if(popQuestions.length != 0)
-          console.log(scienceQuestions.shift());
-        else {
-          noQuestionsLeft('Science');
-        }
-        break;
-      case 'Sports':
-        if(popQuestions.length != 0)
-          console.log(sportsQuestions.shift());
-        else {
-         noQuestionsLeft('Sports');
-        }
-        break;
-      case 'Rock':
-        if(popQuestions.length != 0)
-          console.log(rockQuestions.shift());
-        else {
-          noQuestionsLeft('Rock');
-        }
-        break;
-      default:
-        console.log("No such category");
       }
+      return "No such category";
     };
 }
 
 var notAWinner = false;
 
-var questionsObject = new QuestionDatabase();
+var questionsObject = new QuestionDatabase(["Pop", "Science", "Sports", "Rock"]);
 var game = new Game(questionsObject);
 
 game.add('Chet');

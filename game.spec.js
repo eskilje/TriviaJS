@@ -1,7 +1,7 @@
 require('./game.js');
 
 describe("The test environment", function() {
-	var questionsObjectTest = new QuestionDatabase();
+	var questionsObjectTest = new QuestionDatabase(["Pop", "Science", "Sports", "Rock"]);
 	var gameTest = new Game(questionsObjectTest);
 
 	gameTest.add('Chet');
@@ -23,6 +23,6 @@ describe("The test environment", function() {
 
 	it("player 1 should be Chet", function() {
 		player = gameTest.getPlayer(0);
-		expect(player.getName).toEqual("Chet");
+		expect(player.playerName).toEqual("Chet");
 	})
 });
